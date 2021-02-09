@@ -1,0 +1,80 @@
+---
+title: "GEOtest"
+author: "Noah Black"
+date: "8/16/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(Biobase)
+library(GEOquery)
+library(limma)
+
+
+# load series and platform data from GEO
+
+gset <- getGEO("GSE135304", GSEMatrix =TRUE, AnnotGPL=TRUE)
+if (length(gset) > 1) idx <- grep("GPL10558", attr(gset, "names")) else idx <- 1
+gset <- gset[[idx]]
+
+# make proper column names to match toptable 
+fvarLabels(gset) <- make.names(fvarLabels(gset))
+
+# group names for all samples
+gsms <- paste0("011010000010010111111111110000111111111111111111X0",
+        "00011111111111111111111111110011111111111111110010",
+        "0XXXX1111111111111111100111111111110X0111111011101",
+        "1101011111111101001111111110XX00X0XX00X0X111XXX111",
+        "11011111X011111111XXX11111110XX0XXX0XX0XX0X0111100",
+        "XX111011111111111111101110110010110101111111111000",
+        "00XXXXXXXXXXXXX1111111111XXXX0XX0X01111111111XX0XX",
+        "XXXX0111111111111X0X0XXXX1111111000000000000000000",
+        "001111111111111111111110111010010111101010011X0000",
+        "X0XXX0000X00X011000011111X0X1110000100001000100001",
+        "100001000000000010X000001100110101X101101000000000",
+        "00010100111101001011100011111111111111111111111111",
+        "11111111111111111111111110000000000100000000001111",
+        "111111111111XX00X0X0X01111111111000X0X000011111111",
+        "110X0000X0XX")
+sml <- c()
+for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
+
+# eliminate samples marked as "X"
+sel <- which(sml != "X")
+sml <- sml[sel]
+gset <- gset[ ,sel]
+
+# log2 transform
+ex <- exprs(gset)
+qx <- as.numeric(quantile(ex, c(0., 0.25, 0.5, 0.75, 0.99, 1.0), na.rm=T))
+LogC <- (qx[5] > 100) ||
+          (qx[6]-qx[1] > 50 && qx[2] > 0) ||
+          (qx[2] > 0 && qx[2] < 1 && qx[4] > 1 && qx[4] < 2)
+if (LogC) { ex[which(ex <= 0)] <- NaN
+  exprs(gset) <- log2(ex) }
+```
+```{r}
+head(exprs(gset))
+```
+```{r}
+write.csv(exprs(gset),"C:\\Dow GIDAS\\Bayes demo AI\\express_vals.csv")
+```
+```{r}
+gset <- getGEO("GSE135304", GSEMatrix =TRUE, getGPL=FALSE)
+if (length(gset) > 1) idx <- grep("GPL10558", attr(gset, "names")) else idx <- 1
+gset <- gset[[idx]]
+```
+```{r}
+gse <- getGEO("GSE135304", GSEMatrix = TRUE)
+
+dim(pData(gse[[1]]))
+head(pData(gse[[1]])[1:3,])
+```
+```{r}
+write.csv(pData(gse[[1]]),"C:\\Dow GIDAS\\Bayes demo AI\\class.csv")
+```
+
