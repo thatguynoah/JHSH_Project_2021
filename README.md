@@ -5,7 +5,7 @@ Hi visitors! This is a project made my junior year of high school. This project 
 This project takes advantage of open source data that can be accessed and used by anyone. I encourage anyone interested in AI or bioinformatics
 to make use of my code, submit edits, and reach out for any assistance I can provide. As I am a novice programmer, I know there are many areas to 
 streamline and improve my code. If you come across code you would like to improve, I'd be happy to update this repository with the better code.
-My project relies on a dataset from GEO (Gene Expression Omnibus.) This dataset, XXX, uses microarray expression data from control subjects and 
+My project relies on a dataset from GEO (Gene Expression Omnibus.) This dataset, GSE 135304, uses microarray expression data from control subjects and 
 patients with malignant lung nodules. The expression data comes from peripheral blood. From this data I was able to extract data frames using R 
 and many of its modules. I saved these data sets as CSVs that I loaded into a Python Jupyter Notebook for further analysis. I strategically filtered 
 and organized these data frames into a table consisting of the top 50 most differently regulated genes based on adjusted P value. I continued to use 
